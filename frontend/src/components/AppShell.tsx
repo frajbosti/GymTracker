@@ -21,9 +21,10 @@ export default function AppShell({ children, navigation, activePage, displayName
     mainRef.current?.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
   }, [activePage, mainRef, displayName]);
   const initials = displayName.trim().split(/\s+/).slice(0, 2).map(word => word[0]).join('').toUpperCase();
-  const link = (item: NavigationItem) => <a key={item.id} href={item.href} aria-current={activePage === item.id ? 'page' : undefined} onClick={() => { setMenuOpen(false); onNavigate?.(); }}><Icon name={item.icon}/><span>{item.label}</span>{item.inProgress && <span className="active-dot" aria-label="Workout in progress"/>}</a>;
+  const link = (item: NavigationItem) => <a key={item.id} href={item.href} aria-current={activePage === item.id ? 'page' : undefined} onClick={() => { setMenuOpen(false); onNavigate?.(); }}><Icon name={item.icon}/><span>{item.label}</span>{item.inProgress && <span className="active-dot" role="img" aria-label="Workout in progress"/>}</a>;
   const active = navigation.find(item => item.id === activePage);
   return <div className="app-shell">
+    {/* biome-ignore lint/a11y/useValidAnchor: skip link to the main content is an accepted accessibility pattern */}
     <a href="#main-content" className="skip-link" onClick={event => { event.preventDefault(); mainRef.current?.focus(); }}>Skip to content</a>
     <aside className="sidebar">
       <a className="brand" href={navigation[0]?.href ?? '#account'}><span className="brand-mark"><Icon name="workout" size={23}/></span>GymTracker<span className="brand-period">.</span></a>
@@ -31,7 +32,7 @@ export default function AppShell({ children, navigation, activePage, displayName
       <div className="sidebar-bottom"><div className="profile"><span className="avatar" aria-hidden="true">{initials}</span><div><strong>{displayName}</strong><span>{roleLabel}</span></div></div></div>
     </aside>
     <div className="workspace">
-      <header className="topbar"><div className="topbar-left"><button className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(current => !current)}><Icon name={menuOpen ? 'close' : 'menu'}/></button><span className="breadcrumb">{roleLabel}<span>/</span><strong>{active?.label ?? 'Workspace'}</strong></span></div>{onLogout && <Button onClick={onLogout}>Sign out</Button>}</header>
+      <header className="topbar"><div className="topbar-left"><button type="button" className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(current => !current)}><Icon name={menuOpen ? 'close' : 'menu'}/></button><span className="breadcrumb">{roleLabel}<span>/</span><strong>{active?.label ?? 'Workspace'}</strong></span></div>{onLogout && <Button onClick={onLogout}>Sign out</Button>}</header>
       {menuOpen && <nav className="mobile-nav" id="mobile-navigation" aria-label="Mobile navigation">{navigation.map(link)}</nav>}
       <main id="main-content" ref={mainRef} tabIndex={-1}><div className="content">{children}</div></main>
     </div>

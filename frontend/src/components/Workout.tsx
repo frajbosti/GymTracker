@@ -82,7 +82,7 @@ export default function Workout({ client, sessionId }: { client: AuthClient; ses
   }
   const selected = programs.find(program => program.id === selectedId);
   return <div ref={heading}>
-    {loading ? <><PageHeading title="Workout"/><div className="panel program-editor" aria-busy="true" aria-label="Loading workout"><div className="session-skeleton"/><div className="session-skeleton short"/></div></>
+    {loading ? <><PageHeading title="Workout"/><div className="panel program-editor" role="status" aria-busy="true" aria-label="Loading workout"><div className="session-skeleton"/><div className="session-skeleton short"/></div></>
       : workout && !loadError ? <SavedPlan key={workout.id} workout={workout} client={client} onFinished={finished} onChoose={chooseAnother}/>
       : <>
         {selected && !loadError && <Button variant="ghost" className="back-link" disabled={!!pendingDay} onClick={() => { setSelectedId(null); setError(''); }}>← All workout programs</Button>}
