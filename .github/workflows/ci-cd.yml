@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prenos kode
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Namestitev Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -31,10 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prenos kode
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Namestitev Node.js (s predpomnilnikom npm)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -65,3 +65,58 @@ jobs:
             backend/prisma
             backend/package.json
             package-lock.json
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: gymtracker
+          POSTGRES_PASSWORD: gymtracker
+          POSTGRES_DB: gymtracker_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U gymtracker -d gymtracker_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgresql://gymtracker:gymtracker@localhost:5432/gymtracker_test?schema=public
+    steps:
+      - name: Prenos kode
+        uses: actions/checkout@v5
+
+      - name: Namestitev Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Namestitev odvisnosti
+        run: npm ci
+
+      - name: Generiranje Prisma Clienta
+        run: npm run db:generate
+
+      - name: Testi s pokritostjo (frontend in backend)
+        run: npm run test:coverage
+
+      - name: Migracije testne baze
+        run: npm run db:migrate -w backend
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+
+      - name: Integracijski testi backenda (PostgreSQL)
+        run: npm run test:integration -w backend
+
+      - name: Shrani poročilo o pokritosti
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            frontend/coverage
+            backend/coverage

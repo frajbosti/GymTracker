@@ -1,2 +1,9 @@
 import { defineConfig } from 'vitest/config';
-export default defineConfig({ test: { environment: 'node', include: ['src/**/*.test.ts'], exclude: ['src/**/*.integration.test.ts'] } });
+export default defineConfig({
+  test: {
+    environment: 'node',
+    include: ['src/**/*.test.ts'],
+    exclude: ['src/**/*.integration.test.ts'],
+    coverage: { provider: 'v8', reporter: ['text-summary', 'html', 'lcov'], include: ['src/**'] },
+  },
+});
