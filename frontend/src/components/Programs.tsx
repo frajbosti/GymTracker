@@ -95,7 +95,7 @@ export default function Programs({ client }: { client: AuthClient }) {
     {selected && <Button variant="ghost" className="back-link" onClick={back}>← All programs</Button>}
     <div ref={heading} tabIndex={-1}><PageHeading title={detail?.name ?? 'My programs'} description={detail?.description ?? (selected ? undefined : 'Build your training plan, one day at a time.')} action={!loading && !error && !editor ? <Button variant="primary" onClick={() => { setEditor('program'); setNotice(''); }}>{selected ? 'Edit program' : 'Create program'}<Icon name="plus" size={16}/></Button> : undefined}/></div>
     {notice && <p role="status" className="notice">{notice}</p>}
-    {loading ? <div className="panel program-editor" aria-busy="true" aria-label="Loading programs"><div className="session-skeleton"/><div className="session-skeleton short"/></div>
+    {loading ? <div className="panel program-editor" role="status" aria-busy="true" aria-label="Loading programs"><div className="session-skeleton"/><div className="session-skeleton short"/></div>
       : error ? <div className="panel program-editor"><p role="alert" className="field-error">{error}</p><Button onClick={() => setAttempt(value => value + 1)}>Try again</Button></div>
       : editor ? <EditorForm key={`${selected}-${editor}-${editingDay?.id}`} api={api} program={detail} {...(editor === 'day' ? { day: editingDay, days: detail?.days } : {})} onSave={editor === 'day' ? saveDay : saveProgram} onCancel={() => setEditor(null)}/>
       : detail ? <>

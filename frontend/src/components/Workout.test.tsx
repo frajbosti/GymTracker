@@ -36,7 +36,7 @@ it.each([own, assigned])('starts the selected day from $source programs and disp
   expect(screen.getByText('Saved program name · Day 3')).toBeTruthy();
   expect(screen.queryByText('Current squat')).toBeNull();
   expect(fetch.mock.calls.at(-1)?.[1]).toMatchObject({ method: 'POST', body: JSON.stringify({ programId: program.id, dayId: 'day', ...(program.assignmentId ? { assignmentId: program.assignmentId } : {}) }) });
-  expect((fetch.mock.calls.at(-1)?.[1].headers as Headers).get('Authorization')).toBe('Bearer token');
+  expect((fetch.mock.calls.at(-1)?.[1]?.headers as Headers | undefined)?.get('Authorization')).toBe('Bearer token');
   expect(screen.getAllByRole('listitem').map(item => item.querySelector('h2')?.textContent)).toEqual(['Saved squat A', 'Saved squat B']);
   expect(screen.getByText('3 sets × 8 reps · 0 kg')).toBeTruthy();
   expect(screen.getByText('2 sets × 12 reps · No target weight')).toBeTruthy();

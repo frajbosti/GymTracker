@@ -34,7 +34,7 @@ it('adds a catalog exercise with targets and optional weight through the authent
   expect(await screen.findByText('4 sets × 10 reps · No target weight')).toBeTruthy();
   expect(fetch.mock.calls.at(-1)?.[0]).toContain('/api/programs/program/days/day/exercises');
   expect(fetch.mock.calls.at(-1)?.[1]).toMatchObject({ method: 'POST', body: JSON.stringify({ exerciseId: 'squat', targetSets: 4, targetReps: 10, targetWeightKg: null, position: 1 }) });
-  expect((fetch.mock.calls.at(-1)?.[1].headers as Headers).get('Authorization')).toBe('Bearer token');
+  expect((fetch.mock.calls.at(-1)?.[1]?.headers as Headers | undefined)?.get('Authorization')).toBe('Bearer token');
   expect(onChange).toHaveBeenCalledWith([expect.objectContaining({ id: 'entry-a' })]);
 });
 it('edits targets with decimal and zero weights and allows clearing weight', async () => {

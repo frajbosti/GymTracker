@@ -96,7 +96,7 @@ export default function ExercisePlanner({ client, programId, day, onBack, onChan
     {notice && <p role="status" className="notice">{notice}</p>}
     {error && <div className="notice"><p role="alert" className="field-error">{error}</p><Button disabled={pending} onClick={() => setAttempt(value => value + 1)}>Refresh list</Button></div>}
     {editing !== undefined && <TargetsForm key={editing?.id ?? 'new'} entry={editing} catalog={catalog} pending={pending || loading} onSave={save} onCancel={() => { setEditing(undefined); setError(''); }}/> }
-    {loading ? <div className="panel program-editor" aria-busy="true" aria-label="Loading exercises"><div className="session-skeleton"/><div className="session-skeleton short"/></div>
+    {loading ? <div className="panel program-editor" role="status" aria-busy="true" aria-label="Loading exercises"><div className="session-skeleton"/><div className="session-skeleton short"/></div>
       : <>
         {!catalog.length && !error && <p className="notice">No exercises are currently available in the catalog.</p>}
         {entries.length ? <ol className="planned-exercises">{entries.map((entry, index) => <li key={entry.id} className="panel planned-exercise">

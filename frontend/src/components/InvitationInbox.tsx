@@ -77,6 +77,7 @@ export default function InvitationInbox({ client }: { client: AuthClient }) {
 function RevokeConfirmation({ trainerName, onCancel, onConfirm }: { trainerName: string; onCancel: () => void; onConfirm: () => void }) {
   const cancel = useRef<HTMLButtonElement>(null);
   useEffect(() => { cancel.current?.focus(); }, []);
+  // biome-ignore lint/a11y/useSemanticElements: confirmation is not a form, so role="group" fits better than <fieldset>
   return <div className="revoke-confirmation" role="group" aria-label={`Revoke collaboration with ${trainerName}?`} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); onCancel(); } }}>
     <p>Revoke collaboration with <strong>{trainerName}</strong>? They will lose access to your results and cannot assign new programs. Your existing programs and workout history stay available.</p>
     <div className="invitation-actions"><button ref={cancel} type="button" className="button button-secondary" onClick={onCancel}>Cancel</button><Button onClick={onConfirm}>Confirm revocation</Button></div>

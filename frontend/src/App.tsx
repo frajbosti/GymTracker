@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, type ReactNode, Suspense, useEffect, useRef, useState } from 'react';
 import { createMockWorkoutService, type Snapshot, type Workout, type WorkoutService } from './data/workouts';
 import { Badge, Button, EmptyState, Icon, PageHeading, type IconName } from './components/ui';
 import { WorkoutScreen } from './components/WorkoutScreen';
@@ -69,7 +69,7 @@ export default function App({ service = defaultService }: { service?: WorkoutSer
     finally { setStarting(false); }
   }
   const totalSets = completed.reduce((total, workout) => total + workout.sets.length, 0);
-  let content;
+  let content: ReactNode;
   if (loadError) content = <><PageHeading title="Unable to load workouts"/><div className="panel"><EmptyState title="Your workouts couldn’t be loaded" action={<Button onClick={() => setLoadAttempt(loadAttempt + 1)}>Try again</Button>}><span role="alert">{loadError}</span></EmptyState></div></>;
   else if (!data) content = <div role="status" className="loading-state"><span className="loading-line"/><p>Loading workouts…</p></div>;
   else if (page === 'dashboard') content = <>

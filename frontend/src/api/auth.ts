@@ -16,7 +16,7 @@ export function createAuthClient() {
   let token: string | null = null;
   let session: Session | null = null;
   const listeners = new Set<() => void>();
-  function notify() { listeners.forEach(listener => listener()); }
+  function notify() { for (const listener of listeners) listener(); }
   let restoring: Promise<void> | null = null;
   let logoutRequest: Promise<unknown> | null = null;
   let pendingLogin: Promise<unknown> = Promise.resolve();

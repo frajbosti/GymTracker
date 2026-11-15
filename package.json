@@ -16,6 +16,7 @@
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "test": "npm run test --workspaces",
+    "lint": "biome lint",
     "db:up": "docker compose up -d --wait db",
     "db:down": "docker compose down",
     "db:migrate": "npm run db:migrate -w backend",
@@ -24,6 +25,7 @@
     "db:generate": "npm run db:generate -w backend"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.8",
     "concurrently": "^10.0.6"
   }
 }
