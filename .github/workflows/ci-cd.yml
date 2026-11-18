@@ -64,6 +64,9 @@ jobs:
             backend/dist
             backend/prisma
             backend/package.json
+            backend/Dockerfile
+            frontend/package.json
+            package.json
             package-lock.json
 
   test:
@@ -120,3 +123,43 @@ jobs:
           path: |
             frontend/coverage
             backend/coverage
+
+  deploy:
+    name: deploy
+    needs: [lint, build, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/gymtracker-backend
+    steps:
+      - name: Prenos artefakta frontend
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend-dist
+
+      - name: Namestitev frontenda na Netlify
+        run: npx --yes netlify-cli deploy --dir=frontend-dist --prod --no-build
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Prenos artefakta backend
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: backend-paket
+
+      - name: Prijava v GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Zapakiraj backend v Docker sliko in jo objavi
+        working-directory: backend-paket
+        run: |
+          docker build -f backend/Dockerfile -t $IMAGE:${{ github.sha }} -t $IMAGE:latest .
+          docker push $IMAGE:${{ github.sha }}
+          docker push $IMAGE:latest
