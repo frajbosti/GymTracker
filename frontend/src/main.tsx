@@ -4,7 +4,3 @@ import Root from './Root';
 import './style.css';
 
 createRoot(document.getElementById('root')!).render(<StrictMode><Root /></StrictMode>);
-
-
-// Namerna napaka za preverjanje cevovoda
-debugger;
