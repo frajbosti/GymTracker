@@ -1,5 +1,9 @@
 # GymTracker
 
+[![CI/CD](https://github.com/frajbosti/GymTracker/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/frajbosti/GymTracker/actions/workflows/ci-cd.yml)
+
+**Live app:** https://gymtracker-frajbosti.netlify.app (backend: https://gymtracker-backend-latest-kmez.onrender.com/api/health)
+
 Plan workouts, record sets, and track progress. Trainers can assign programs and review results for members who accept their invitation.
 
 Built with React, TypeScript, Express, Prisma, and PostgreSQL.
@@ -69,8 +73,22 @@ After pulling schema changes, also run `npm run db:generate`. Stop the app with 
 
 | Command | Purpose |
 | --- | --- |
+| `npm run lint` | Check code with Biome |
 | `npm test` | Run unit and component tests |
+| `npm run test:coverage` | Run tests with a coverage report |
 | `npm run typecheck` | Check TypeScript |
 | `npm run build` | Build both apps |
 
 Project design and architecture are in [docs](docs/).
+
+
+## CI/CD pipeline
+
+The GitHub Actions workflow [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every pull request to `main` and on every push to `main`. A pull request can be merged only when `lint`, `build` and `test` pass.
+
+| Job | What it does |
+| --- | --- |
+| `lint` | Checks frontend and backend code with Biome (`npm run lint`). |
+| `build` | Builds the frontend (Vite) and backend (TypeScript) with a cached npm install, and uploads the results as artifacts (`frontend-dist`, `backend-dist`). |
+| `test` | Runs frontend and backend tests with a coverage report (artifact `coverage-report`) and backend integration tests against a PostgreSQL service. |
+| `deploy` | Runs only on push to `main` after the three jobs pass, in the `production` environment. Uploads the `frontend-dist` artifact to Netlify (which proxies `/api` to the backend) and packages the `backend-dist` artifact into a Docker image that Render deploys. The database runs on Neon. |

@@ -16,7 +16,7 @@ Tehnologije: React + TypeScript + Vite (frontend), Node.js + Express + TypeScrip
 | F07 | Zaključek treninga, opomba, zgodovina | Implementirano |
 | F08 | Graf napredka po vaji, trenerjev vpogled | Implementirano |
 
-Vse funkcionalnosti, ki so v dokumentu `02-funkcionalnosti-in-obseg.md` označene kot MVP, so implementirane. Funkcionalnosti F03 in F09–F14 so bile označene kot »predvideno« in niso del MVP. Projekt ima 235 testov na frontendu ter 4 enotske in 126 integracijskih testov na backendu.
+Vse funkcionalnosti, ki so v dokumentu `02-funkcionalnosti-in-obseg.md` označene kot MVP, so implementirane. Funkcionalnosti F03 in F09–F14 so bile označene kot »predvideno« in niso del MVP. Projekt ima 235 testov na frontendu ter 4 enotske in 272 integracijskih testov na backendu.
 
 ## Ujemanje z uporabniškimi zgodbami
 
