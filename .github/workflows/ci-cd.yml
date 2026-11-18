@@ -141,7 +141,8 @@ jobs:
         with:
           name: frontend-dist
           path: frontend-dist
-
+      - name: Posredovanje /api na backend (Netlify proxy)
+        run: echo "/api/*  ${{ vars.BACKEND_URL }}/api/:splat  200" > frontend-dist/_redirects 
       - name: Namestitev frontenda na Netlify
         run: npx --yes netlify-cli deploy --dir=frontend-dist --prod --no-build
         env:
@@ -163,3 +164,8 @@ jobs:
           docker build -f backend/Dockerfile -t $IMAGE:${{ github.sha }} -t $IMAGE:latest .
           docker push $IMAGE:${{ github.sha }}
           docker push $IMAGE:latest
+
+      - name: Namestitev backenda na Render (nova slika)
+        run: curl -fsS -G "$RENDER_DEPLOY_HOOK_URL" --data-urlencode "imgURL=$IMAGE:${{ github.sha }}"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
